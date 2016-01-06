@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Light;
@@ -98,8 +99,9 @@ public class TerrainRenderer extends Renderer {
 	}
 
 	@Override
-	public void render(List<Light> lights, Camera camera) {
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		this.shader.start();
+		this.shader.loadUniform(TerrainShader.PLANE, clipPlane);
 		this.shader.loadUniform(TerrainShader.SKY_COLOR, new Vector3f(Camera.SKY_RED, Camera.SKY_GREEN, Camera.SKY_BLUE));
 //		this.shader.loadLights(lights);
 		for (int i = 0; i < Light.MAX_LIGHTS; i++) {

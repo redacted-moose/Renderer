@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Light;
@@ -145,7 +146,7 @@ private static final float SIZE = 500f;
 	}
 
 	@Override
-	public void render(List<Light> lights, Camera camera) {
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		render(camera, Camera.SKY_RED, Camera.SKY_GREEN, Camera.SKY_BLUE);
 	}
 

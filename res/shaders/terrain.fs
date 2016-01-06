@@ -1,5 +1,5 @@
 // Fragment Shader
-#version 400 core
+#version 330 core
 
 const int MAX_LIGHTS = 4;
 

@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -90,8 +91,9 @@ public class EntityRenderer extends Renderer {
 	}
 
 	@Override
-	public void render(List<Light> lights, Camera camera) {
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		this.shader.start();
+		this.shader.loadUniform(StaticShader.PLANE, clipPlane);
 		this.shader.loadUniform(StaticShader.SKY_COLOR, camera.getSkyColor());
 //		this.shader.loadLights(lights); // If lights don't change, only load once
 		for (int i = 0; i < Light.MAX_LIGHTS; i++) {

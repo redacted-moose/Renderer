@@ -1,5 +1,5 @@
 // Vertex Shader
-#version 400 core
+#version 330 core
 
 in vec3 position;
 in vec2 textureCoords;
@@ -24,11 +24,18 @@ uniform float numberOfRows;
 uniform vec2 offset;
 
 const float density = 0.0035;
+//const float density = 0;
 const float gradient = 5.0;
+
+// Clipping plane definition
+uniform vec4 plane;
 
 void main(void) {
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
+	
+	gl_ClipDistance[0] = dot(worldPosition, plane); // Clipping plane
+	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = (textureCoords / numberOfRows) + offset;

@@ -13,6 +13,7 @@ import shaders.uniforms.IntUniform;
 import shaders.uniforms.Matrix4fUniform;
 import shaders.uniforms.Uniform;
 import shaders.uniforms.Vector3fUniform;
+import shaders.uniforms.Vector4fUniform;
 import toolbox.Maths;
 
 public class TerrainShader extends ShaderProgram {
@@ -38,6 +39,7 @@ public class TerrainShader extends ShaderProgram {
 	public static final String G_TEXTURE = "gTexture";
 	public static final String B_TEXTURE = "bTexture";
 	public static final String BLEND_MAP = "blendMap";
+	public static final String PLANE = "plane";
 
 	private int location_lightPosition[];
 	private int location_lightColor[];
@@ -78,6 +80,8 @@ public class TerrainShader extends ShaderProgram {
 		this.uniforms.put(BLEND_MAP, new IntUniform(BLEND_MAP, super.getUniformLocation(BLEND_MAP)));
 
 		this.uniforms.put(SKY_COLOR, new Vector3fUniform(SKY_COLOR, super.getUniformLocation(SKY_COLOR)));
+
+		this.uniforms.put(PLANE, new Vector4fUniform(PLANE, super.getUniformLocation(PLANE)));
 
 		// location_lightPosition = new int[Light.MAX_LIGHTS];
 		// location_lightColor = new int[Light.MAX_LIGHTS];

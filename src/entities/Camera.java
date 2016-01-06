@@ -103,5 +103,9 @@ public class Camera {
 	public Vector3f getSkyColor() {
 		return new Vector3f(SKY_RED, SKY_GREEN, SKY_BLUE);
 	}
+
+	public void invertPitch() {
+		this.pitch = -pitch;
+	}
 	
 }

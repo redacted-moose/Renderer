@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +13,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import shaders.uniforms.Uniform;
 
@@ -61,6 +61,10 @@ public abstract class ShaderProgram {
 	protected void loadVector3f(int location, Vector3f vector) {
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
 	}
+	
+	protected void loadVector4f(int location, Vector4f vector) {
+		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+	}
 
 	protected void loadBoolean(int location, boolean value) {
 		float toLoad = (value) ? 1 : 0;
@@ -80,6 +84,7 @@ public abstract class ShaderProgram {
 	public void loadUniform(String uniform, Object value) {
 		this.uniforms.get(uniform).load(value);
 	}
+
 	public void start() {
 		GL20.glUseProgram(this.programID);
 	}

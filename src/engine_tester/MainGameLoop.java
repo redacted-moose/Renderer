@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -76,7 +76,7 @@ public class MainGameLoop {
 		lamp.getTexture().setUseFakeLighting(true);
 
 		List<Terrain> terrains = new ArrayList<Terrain>();
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		terrains.add(terrain);
 		// Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap,
 		// "heightMap");
@@ -168,7 +168,7 @@ public class MainGameLoop {
 //				light.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
 //			}
 			
-			renderer.renderScene(entities, terrains, lights, camera);
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, 15));
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}

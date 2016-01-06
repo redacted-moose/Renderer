@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -27,6 +30,7 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;
+import water.WaterFrameBuffers;
 import water.WaterTile;
 
 public class WaterDemo {
@@ -79,7 +83,7 @@ public class WaterDemo {
 		lamp.getTexture().setUseFakeLighting(true);
 
 		List<Terrain> terrains = new ArrayList<Terrain>();
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		terrains.add(terrain);
 		// Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap,
 		// "heightMap");
@@ -147,8 +151,8 @@ public class WaterDemo {
 		Camera camera = new Camera(player);
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guis.add(gui);
+//		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+//		guis.add(gui);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
@@ -161,22 +165,50 @@ public class WaterDemo {
 		lights.add(light);
 		
 		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
-		waters.add(new WaterTile(75, -75, 0));
+		WaterTile water = new WaterTile(75, -75, 5);
+		waters.add(water);
+		
+		
+//		GuiTexture refraction =  new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+//		GuiTexture reflection =  new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+//		guis.add(refraction);
+//		guis.add(reflection);
 		
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
 			picker.update();
+			
+			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+			
+			// Render reflection
+			fbos.bindReflectionFrameBuffer();
+			float distance = 2 * (camera.getPosition().y - water.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1f)); // Offset to minimize edge distortion glitch
+			camera.getPosition().y += distance;
+			camera.invertPitch();
 
-			renderer.renderScene(entities, terrains, lights, camera);
-			waterRenderer.render(waters, camera);
+			// Render refraction
+			fbos.bindRefractionFrameBuffer();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1f)); // Offset to minimize edge distortion glitch
+
+			// Render to screen
+			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+			fbos.unbindCurrentFrameBuffer();
+			// If graphics driver ignores the glDisable call, clip plane is set really high so it doesn't clip anything
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, 1000000));
+			waterRenderer.render(waters, camera, lights.get(0));
 			guiRenderer.render(guis);
 
 			DisplayManager.updateDisplay();
 		}
 
+		fbos.cleanUp();
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();

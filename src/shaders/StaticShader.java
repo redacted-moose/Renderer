@@ -1,13 +1,7 @@
 package shaders;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
-import entities.Camera;
 import entities.Light;
 import shaders.uniforms.BooleanUniform;
 import shaders.uniforms.FloatUniform;
@@ -15,7 +9,7 @@ import shaders.uniforms.Matrix4fUniform;
 import shaders.uniforms.Uniform;
 import shaders.uniforms.Vector2fUniform;
 import shaders.uniforms.Vector3fUniform;
-import toolbox.Maths;
+import shaders.uniforms.Vector4fUniform;
 
 public class StaticShader extends ShaderProgram {
 
@@ -38,6 +32,7 @@ public class StaticShader extends ShaderProgram {
 	public static final String SKY_COLOR = "skyColor";
 	public static final String NUMBER_OF_ROWS = "numberOfRows";
 	public static final String OFFSET = "offset";
+	public static final String PLANE = "plane";
 
 	// private int location_lightPosition[];
 	// private int location_lightColor[];
@@ -77,6 +72,8 @@ public class StaticShader extends ShaderProgram {
 		this.uniforms.put(OFFSET, new Vector2fUniform(OFFSET, super.getUniformLocation(OFFSET)));
 
 		this.uniforms.put(SKY_COLOR, new Vector3fUniform(SKY_COLOR, super.getUniformLocation(SKY_COLOR)));
+		
+		this.uniforms.put(PLANE, new Vector4fUniform(PLANE, super.getUniformLocation(PLANE)));
 
 		// location_lightPosition = new [MAX_LIGHTS];
 		ArrayList<Uniform> lightPosition = new ArrayList<Uniform>(Light.MAX_LIGHTS);

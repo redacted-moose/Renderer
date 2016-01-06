@@ -43,6 +43,7 @@ public class Terrain {
 
 		BufferedImage image = null;
 		try {
+//			System.out.println("res/textures/" + heightMap + "." + "png");
 			image = ImageIO.read(new File("res/textures/" + heightMap + "." + "png"));
 		} catch (IOException e) {
 			e.printStackTrace();
